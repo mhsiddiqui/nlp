@@ -8,8 +8,8 @@ from ipware.ip import get_ip
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
-from nlp.models import GeneratedVoice
-from urdu_tts.settings import BASE_DIR, FESTIVALDIR
+from tts.models import GeneratedVoice
+from nlp.settings import BASE_DIR, FESTIVALDIR
 from django.shortcuts import render
 
 # Create your views here.

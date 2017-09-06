@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-import nlp.models
+import tts.models
 
 
 class Migration(migrations.Migration):
@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             name='GeneratedVoice',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('file', models.FileField(upload_to=nlp.models.upload_file)),
+                ('file', models.FileField(upload_to=tts.models.upload_file)),
                 ('text', models.CharField(default='', max_length=1000)),
                 ('time', models.DateTimeField(auto_now_add=True)),
                 ('ip', models.CharField(default='', max_length=100)),

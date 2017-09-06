@@ -1,5 +1,5 @@
 """
-WSGI config for urdu_tts project.
+WSGI config for nlp project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "urdu_tts.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "nlp.settings")
 
 application = get_wsgi_application()
