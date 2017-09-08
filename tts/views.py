@@ -16,17 +16,19 @@ from django.shortcuts import render
 from django.views import View
 from django.views.generic import TemplateView
 
+from tts.text_processor.processor import get_processed_data
+
 
 def run_shell_command(command):
     return subprocess.Popen(command, stdout=subprocess.PIPE, shell=True).stdout.read()
 
-
-class IndexPage(TemplateView):
-    template_name = 'nlp/index.html'
+#
+# class IndexPage(TemplateView):
+#     template_name = 'tts/index.html'
 
 
 class TTSPage(TemplateView):
-    template_name = 'nlp/tts/tts.html'
+    template_name = 'tts/tts.html'
 
 
 class GenerateVoice(View):
@@ -42,11 +44,12 @@ class GenerateVoice(View):
         generated_voice = self.generate_voice(text_input_file, uuid_str)
         saved_obj = self.save_file_to_db(generated_voice, request.POST.get('text'))
         self.delete_temp_files(text_input_file, generated_voice)
-        return render(request, template_name='nlp/tts/voice_demo.html', context={'generated': saved_obj})
+        return render(request, template_name='tts/voice_demo.html', context={'generated': saved_obj})
 
     def save_input_in_file(self, txt, uuid_str):
         file_with_path = '%s/input/input_%s.txt' % (os.path.join(BASE_DIR, 'tmp'), uuid_str)
         with open(file_with_path, 'w+') as f:
+            txt = get_processed_data(txt)
             f.write(txt.encode('utf8'))
         return file_with_path
 
