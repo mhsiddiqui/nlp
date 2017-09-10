@@ -14,7 +14,6 @@ class GenerateUrduText(object):
     def __init__(self, string, string_type=None):
         self.string = string
         self.string_type = string_type
-        print RESOURCE_PATH
         self.number_mappings = self._get_mappings(RESOURCE_PATH + '/number.csv')
         self.arabic_numerals_mappings = self._get_mappings(RESOURCE_PATH + '/arabic.csv')
         self.english_mappings = self._get_mappings(RESOURCE_PATH + '/english.csv')
@@ -86,10 +85,15 @@ class GenerateUrduText(object):
         all_factored_numbers += facored_out
         facored_out, number = self._get_number_factors(number, 100)
         all_factored_numbers += facored_out
-        all_factored_numbers.append(number)
+        if number != 0:
+            all_factored_numbers.append(number)
         number_in_word = ''
         for num in all_factored_numbers:
-            number_in_word += ' %s' % self.number_mappings.get(str(num))
+            if num < 100:
+                tmp_urdu = self.number_mappings.get(str(num))
+            else:
+                tmp_urdu = self._get_number_urdu_string(num)
+            number_in_word += ' %s' % tmp_urdu
         return number_in_word
 
     def _get_number_factors(self, number, factor):

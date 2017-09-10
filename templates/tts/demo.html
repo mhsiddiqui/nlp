@@ -1,10 +1,13 @@
-<form class="col s12">
-  <div class="row">
-    <div class="input-field col s12">
-      <textarea class="materialize-textarea" id="urdu_text_area"></textarea>
-      <label for="textarea1">Enter Text to Play</label>
+{% extends 'tts/tts.html' %}
+{% block project_page %}
+    <div id="error" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Error!</strong> Kindly add some text and click play button
     </div>
-  </div>
-</form>
-<button class="waves-effect waves-light btn" id="play_sound"><i class="material-icons left">play_circle_outline</i>Play</button>
-<div id="output_div"></div>
+    <textarea id="urdu_text_area" rows="4" cols="50" placeholder="Enter some text and click play button"></textarea>
+    <button class="btn btn-primary btn-lg" id="play_sound" type="button"><i class="fa fa-play" aria-hidden="true"></i>
+    </button>
+    <div id="output_div"></div>
+{% endblock %}

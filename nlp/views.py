@@ -11,4 +11,4 @@ def run_shell_command(command):
 
 
 class IndexPage(TemplateView):
-    template_name = 'tts/index.html'
+    template_name = 'index.html'

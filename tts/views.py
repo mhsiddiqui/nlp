@@ -28,7 +28,21 @@ def run_shell_command(command):
 
 
 class TTSPage(TemplateView):
-    template_name = 'tts/tts.html'
+    template_name = 'tts/introduction.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TTSPage, self).get_context_data(**kwargs)
+        context.update({'subtab': 'intro'})
+        return context
+
+
+class DemoPage(TemplateView):
+    template_name = 'tts/demo.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DemoPage, self).get_context_data(**kwargs)
+        context.update({'subtab': 'demo'})
+        return context
 
 
 class GenerateVoice(View):
