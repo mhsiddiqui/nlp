@@ -32,7 +32,7 @@ class TTSPage(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(TTSPage, self).get_context_data(**kwargs)
-        context.update({'subtab': 'intro'})
+        context.update({'subtab': 'intro', 'navlink': 'project'})
         return context
 
 
@@ -41,7 +41,7 @@ class DemoPage(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(DemoPage, self).get_context_data(**kwargs)
-        context.update({'subtab': 'demo'})
+        context.update({'subtab': 'demo', 'navlink': 'project'})
         return context
 
 
@@ -53,9 +53,10 @@ class GenerateVoice(View):
 
     def post(self, request, *args, **kwargs):
         uuid_str = str(uuid.uuid4())
+        voice = request.POST.get('voice')
         self.delete_old_generated_voice()
         text_input_file = self.save_input_in_file(request.POST.get('text'), uuid_str)
-        generated_voice = self.generate_voice(text_input_file, uuid_str)
+        generated_voice = self.generate_voice(text_input_file, uuid_str, voice)
         saved_obj = self.save_file_to_db(generated_voice, request.POST.get('text'))
         self.delete_temp_files(text_input_file, generated_voice)
         return render(request, template_name='tts/voice_demo.html', context={'generated': saved_obj})
@@ -67,14 +68,15 @@ class GenerateVoice(View):
             f.write(txt.encode('utf8'))
         return file_with_path
 
-    def generate_voice(self, file_with_path, uuid_str):
+    def generate_voice(self, file_with_path, uuid_str, voice):
         output_file = 'out_%s.wav' % uuid_str
         command_data = {
             'path': BASE_DIR,
             'output_file': output_file,
-            'input_file': file_with_path
+            'input_file': file_with_path,
+            'voice': voice
         }
-        command = FESTIVALDIR + '/bin/text2wave -o {path}/tmp/output/{output_file} {input_file}'.format(**command_data)
+        command = FESTIVALDIR + '/bin/text2wave -o {path}/tmp/output/{output_file} -eval "({voice})" {input_file}'.format(**command_data)
         command_output = run_shell_command(command)
         return '%s/tmp/output/%s' % (BASE_DIR, output_file)
 

@@ -17,6 +17,7 @@
 
     <!-- Custom fonts for this template -->
     <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'img/favicon.ico' %}" rel="shortcut icon" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet"
           type="text/css">
@@ -33,14 +34,16 @@
             aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand" href="#">Natural Language Processing</a>
+    <a class="navbar-brand" href="/">
+        <img src="{% static 'img/logo.png' %}" width="50" height="50" alt="">
+    </a>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            <li class="nav-item {% if navlink == 'main' %}active{% endif %}">
+                <a class="nav-link" href="/">Home</a>
             </li>
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown {% if navlink == 'project' %}active{% endif %}">
                 <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink"
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Projects
@@ -49,8 +52,8 @@
                     <a class="dropdown-item" href="{% url 'tts-page' %}">Urdu TTS</a>
                 </div>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+            <li class="nav-item {% if navlink == 'about' %}active{% endif %}">
+                <a class="nav-link" href="#">About Us</a>
             </li>
         </ul>
     </div>
