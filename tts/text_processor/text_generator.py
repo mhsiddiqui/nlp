@@ -35,7 +35,7 @@ class GenerateUrduText(object):
 
     def _get_date_urdu_string(self):
         date_object = parser.parse(self.string)
-        year = self._get_number_urdu_string(date_object.year)
+        year = self._get_number_urdu_string(date_object.year, context='date')
         day = self._get_number_urdu_string(date_object.day)
         month = self.month_mappings.get(str(date_object.month))
         return '%s %s %s' % (day, month, year)
@@ -56,35 +56,30 @@ class GenerateUrduText(object):
                                            seconds_in_urdu)
         return time_in_word
 
-    def _get_number_urdu_string(self, number=None):
+    def _get_number_urdu_string(self, number=None, context='number'):
         if not number:
             number = self.string
         if str(number) in self.number_mappings.keys():
             return self.number_mappings.get(str(number))
         else:
             if float(number).is_integer():
-                return self._get_number_in_word(int(number))
+                return self._get_number_in_word(int(number), context)
             else:
                 floating_value = '.' + str(number).split('.')[1]
                 integer_value = int(float(number))
-                integer_value_in_word = self._get_number_in_word(integer_value)
+                integer_value_in_word = self._get_number_in_word(integer_value, context)
                 floating_value_in_word = self._get_floating_point_in_urdu(floating_value)
                 return '%s %s' % (integer_value_in_word, floating_value_in_word)
 
-    def _get_number_in_word(self, number):
+    def _get_number_in_word(self, number, context='number'):
+        factoring_numbers = [100000000000, 1000000000, 10000000, 100000, 1000, 100]
         all_factored_numbers = []
-        facored_out, number = self._get_number_factors(number, 100000000000)
-        all_factored_numbers += facored_out
-        facored_out, number = self._get_number_factors(number, 1000000000)
-        all_factored_numbers += facored_out
-        facored_out, number = self._get_number_factors(number, 10000000)
-        all_factored_numbers += facored_out
-        facored_out, number = self._get_number_factors(number, 100000)
-        all_factored_numbers += facored_out
-        facored_out, number = self._get_number_factors(number, 1000)
-        all_factored_numbers += facored_out
-        facored_out, number = self._get_number_factors(number, 100)
-        all_factored_numbers += facored_out
+        for fn in factoring_numbers:
+            if context == 'date' and fn == 1000 and (number <2000 or number > 2100):
+                continue
+            facored_out, number = self._get_number_factors(number, fn)
+            all_factored_numbers += facored_out
+
         if number != 0:
             all_factored_numbers.append(number)
         number_in_word = ''

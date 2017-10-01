@@ -8,6 +8,10 @@
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item side-nav-link {% if subtab == 'intro' %}active-side-nav-link{% endif %}" onclick="location.href = '{% url 'tts-page' %}'">Introduction</li>
                         <li class="list-group-item side-nav-link {% if subtab == 'demo' %}active-side-nav-link{% endif %}" onclick="location.href='{% url 'tts-demo' %}'">Demo</li>
+                        <li class="list-group-item side-nav-link {% if subtab == 'evaluate' %}active-side-nav-link{% endif %}" onclick="location.href='{% url 'evaluate-tts-voice' %}'">Evaluate</li>
+                        {% if request.user.is_authenticated %}
+                        <li class="list-group-item side-nav-link {% if subtab == 'result' %}active-side-nav-link{% endif %}" onclick="location.href='{% url 'evaluation_result' %}'">Evaluation Result</li>
+                        {% endif %}
                         <li class="list-group-item side-nav-link {% if subtab == 'download' %}active-side-nav-link{% endif %}">Download</li>
                     </ul>
                 </div>

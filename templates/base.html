@@ -56,6 +56,19 @@
                 <a class="nav-link" href="#">About Us</a>
             </li>
         </ul>
+        {% if not request.user.is_authenticated %}
+        <ul class="navbar-nav justify-content-end">
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/login/">Admin Login</a>
+            </li>
+        </ul>
+        {% else %}
+            <ul class="navbar-nav justify-content-end">
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/logout/">Logout</a>
+            </li>
+        </ul>
+        {% endif %}
     </div>
 </nav>
 <div class="container-fluid" style="margin-top: 10px">
@@ -63,7 +76,7 @@
     {% endblock %}
 </div>
 <!-- Footer -->
-
+<div id="snackbar"></div>
 <div class="footer"></div>
 <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
 

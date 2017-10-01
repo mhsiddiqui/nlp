@@ -132,3 +132,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 FESTIVALDIR = '/home/mhassan/Documents/Festival/SPSYN/festival'
 FESTIVAL = '/home/mhassan/Documents/Festival/SPSYN/festival/bin/festival'
+
+LOGIN_URL = '/admin/login/'

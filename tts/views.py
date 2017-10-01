@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import json
 import subprocess
 import os
 import uuid
+
+from django.contrib.auth.decorators import login_required
+from django.db.models import Avg
+from django.http import HttpResponse
 from ipware.ip import get_ip
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
-from tts.models import GeneratedVoice
+from tts.models import GeneratedVoice, EvaluationData, Evaluation
 from nlp.settings import BASE_DIR, FESTIVALDIR
 from django.shortcuts import render
 
@@ -97,4 +102,54 @@ class GenerateVoice(View):
         GeneratedVoice.objects.filter(ip=get_ip(self.request)).delete()
 
 
+class EvaluateVoice(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(EvaluateVoice, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        sentences = EvaluationData.objects.all()[:10]
+        data = {
+            'sentences': sentences,
+            'marks': range(1, 11),
+            'properties': ['Understandability', 'Naturalness', 'Pleasantness', 'Overall'],
+            'subtab': 'evaluate'
+        }
+        return render(request, template_name='tts/evaluation_form.html', context=data)
+
+    def post(self, request, *args, **kwargs):
+        json_data = json.loads(request.POST.get('form'))
+        for feedback in json_data:
+            feedback.update({'data_id': feedback.get('data')})
+            feedback.pop('data', None)
+            Evaluation.objects.create(**feedback)
+        return HttpResponse("Thanks for evaluating.")
+
+
+class EvaluationResult(View):
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(EvaluationResult, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        voice = kwargs.get('voice', 'voice_pucit_indic_ur_cg')
+        data = self.get_evaluation_result_by_voice(voice)
+        return render(request, template_name='tts/evaluation_result.html', context=data)
+
+    def get_evaluation_result_by_voice(self, voice):
+        data = {}
+        result = EvaluationData.objects.filter(evaluation_of_data__voice=voice).annotate(
+            Avg('evaluation_of_data__understandability'), Avg('evaluation_of_data__naturalness'),
+            Avg('evaluation_of_data__pleasantness'), Avg('evaluation_of_data__overall'))
+        if result:
+            data.update({'result': result})
+        overall_avg = EvaluationData.objects.filter(evaluation_of_data__voice=voice).aggregate(
+            Avg('evaluation_of_data__understandability'), Avg('evaluation_of_data__naturalness'),
+            Avg('evaluation_of_data__pleasantness'), Avg('evaluation_of_data__overall'))
+        if overall_avg:
+            data.update({'overall_result': overall_avg})
+        data.update({'voice': voice, 'subtab': 'result'})
+        return data
 
