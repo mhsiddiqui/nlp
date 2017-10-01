@@ -17,11 +17,10 @@
         <thead class="thead-inverse">
         <tr>
             <th width="400">Text</th>
-            <th width="100">understandability</th>
-            <th>naturalness</th>
-            <th>pleasantness</th>
-            <th>overall</th>
-            <th>voice</th>
+            <th width="100">Understandability</th>
+            <th>Naturalness</th>
+            <th>Pleasantness</th>
+            <th>Overall</th>
         </tr>
         </thead>
         {% for r in result %}
@@ -31,7 +30,6 @@
                 <td>{{ r.evaluation_of_data__understandability__avg }}</td>
                 <td>{{ r.evaluation_of_data__naturalness__avg }}</td>
                 <td>{{ r.evaluation_of_data__pleasantness__avg }}</td>
-                <td>{{ r.evaluation_of_data__overall__avg }}</td>
                 <td>{{ r.evaluation_of_data__overall__avg }}</td>
             </tr>
         {% empty %}
@@ -45,7 +43,6 @@
             <td>{{ overall_result.evaluation_of_data__understandability__avg }}</td>
             <td>{{ overall_result.evaluation_of_data__naturalness__avg }}</td>
             <td>{{ overall_result.evaluation_of_data__pleasantness__avg }}</td>
-            <td>{{ overall_result.evaluation_of_data__overall__avg }}</td>
             <td>{{ overall_result.evaluation_of_data__overall__avg }}</td>
         </tr>
         {% endif %}
