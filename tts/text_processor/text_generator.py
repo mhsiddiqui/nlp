@@ -45,7 +45,6 @@ class GenerateUrduText(object):
             text = re.sub(year_number[0], year_urdu, self.string.encode('utf-8'))
             return text
 
-
     def _get_date_type(self):
         data_check_regex = ''
         all_month = set(self.month_mappings.values())
