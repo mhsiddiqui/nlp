@@ -1,6 +1,9 @@
+import csv
 import re
 
 import collections
+
+from tts.text_processor import RESOURCE_PATH
 
 
 class GetStringType(object):
@@ -28,12 +31,34 @@ class GetStringType(object):
         else:
             return 'None'
 
+    def _get_all_months(self):
+        mapping_dict = {}
+        with open(RESOURCE_PATH + '/month.csv', 'rb') as f:
+            mappings = csv.reader(f)
+            for row in mappings:
+                mapping_dict.update({row[0]: row[1]})
+        return set(mapping_dict.values())
+
     def _date_strings(self):
         regex_string = '\d{1,4}[./-]\d{1,4}[./-]\d{1,4}'
         regex = re.compile(regex_string)
         find_string = regex.findall(self.text)
         self.text = re.sub(regex_string, '', self.text)
+        find_string += self._text_date()
         return find_string
+
+    def _text_date(self):
+        all_months = self._get_all_months()
+        text_dates = []
+        regex_pattern = '%s \d{4}'
+        for month in all_months:
+            comp_regex = regex_pattern % month.decode('utf-8').replace(' ', '')
+            regex = re.compile(comp_regex)
+            find_string = regex.findall(self.text)
+            if bool(find_string):
+                text_dates += find_string
+                self.text = re.sub(comp_regex, '', self.text)
+        return text_dates
 
     def _time_strings(self):
         regex_string = '\d{1,2}:\d{1,2}(?::\d{1,2})?'

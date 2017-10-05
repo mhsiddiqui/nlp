@@ -1,16 +1,13 @@
 import csv
-import os
+import re
+
 from dateutil import parser
-from nlp.settings import BASE_DIR
+
 from tts.text_processor.number_strings import GetStringType
-
-
-TEXT_PROCESSOR_PATH = os.path.dirname(os.path.abspath(__file__))
-RESOURCE_PATH = os.path.join(TEXT_PROCESSOR_PATH, 'resources')
+from tts.text_processor import RESOURCE_PATH
 
 
 class GenerateUrduText(object):
-
     def __init__(self, string, string_type=None):
         self.string = string
         self.string_type = string_type
@@ -34,11 +31,34 @@ class GenerateUrduText(object):
         return urdu_string
 
     def _get_date_urdu_string(self):
-        date_object = parser.parse(self.string)
-        year = self._get_number_urdu_string(date_object.year, context='date')
-        day = self._get_number_urdu_string(date_object.day)
-        month = self.month_mappings.get(str(date_object.month))
-        return '%s %s %s' % (day, month, year)
+        date_type = self._get_date_type()
+        if date_type == 1:
+            date_object = parser.parse(self.string)
+            year = self._get_number_urdu_string(date_object.year, context='date')
+            day = self._get_number_urdu_string(date_object.day)
+            month = self.month_mappings.get(str(date_object.month))
+            return '%s %s %s' % (day, month, year)
+        else:
+            year_regex = re.compile(r'\d{4}')
+            year_number = year_regex.findall(self.string)
+            year_urdu = self._get_number_urdu_string(year_number[0], context='date')
+            text = re.sub(year_number[0], year_urdu, self.string.encode('utf-8'))
+            return text
+
+
+    def _get_date_type(self):
+        data_check_regex = ''
+        all_month = set(self.month_mappings.values())
+        for month in all_month:
+            data_check_regex += month.decode('utf-8')
+            data_check_regex += '|'
+        regex = re.compile(data_check_regex)
+        text_dates = regex.findall(self.string)
+        filtered_dates = filter(lambda x: str(x.encode('utf-8')) != '',  text_dates)
+        if bool(filtered_dates):
+            return 2
+        else:
+            return 1
 
     def _get_time_urdu_string(self):
         splitted = self.string.split(':')
@@ -75,7 +95,7 @@ class GenerateUrduText(object):
         factoring_numbers = [100000000000, 1000000000, 10000000, 100000, 1000, 100]
         all_factored_numbers = []
         for fn in factoring_numbers:
-            if context == 'date' and fn == 1000 and (number <2000 or number > 2100):
+            if context == 'date' and fn == 1000 and (number < 2000 or number > 2100):
                 continue
             facored_out, number = self._get_number_factors(number, fn)
             all_factored_numbers += facored_out
