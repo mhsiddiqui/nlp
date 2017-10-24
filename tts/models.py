@@ -30,7 +30,7 @@ class EvaluationData(models.Model):
 
 
 class Evaluation(models.Model):
-    RATING = tuple((x, x) for x in range(1, 11))
+    RATING = tuple((x, x) for x in range(1, 6))
 
     data = models.ForeignKey(to=EvaluationData, related_name='evaluation_of_data')
     understandability = models.IntegerField(default=1, choices=RATING)

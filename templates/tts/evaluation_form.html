@@ -23,15 +23,15 @@
     <table class="table table-bordered">
         <thead class="thead-inverse">
         <tr>
-            <th width="400">Text</th>
+            <th width="700" style="text-align: center">Text</th>
 {#            <th width="150">Voice</th>#}
-            <th width="100">Play</th>
-            <th>Evaluate</th>
+            <th width="200" style="text-align: center">Play</th>
+            <th style="text-align: center">Evaluate</th>
         </tr>
         </thead>
         {% for sentence in sentences %}
             <tr class="voice_row" id="{{ sentence.id }}">
-                <td>
+                <td style="text-align: center">
                     <div id="text_{{ sentence.id }}">{{ sentence.text }}</div>
                 </td>
 {#                <td>#}
@@ -60,7 +60,7 @@
 
                     </div>
                 </td>
-                <td>
+                <td style="text-align: center">
                     <table border="0">
                         {% for prop in properties %}
                             <tr>

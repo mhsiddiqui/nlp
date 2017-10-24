@@ -112,7 +112,7 @@ class EvaluateVoice(View):
         sentences = EvaluationData.objects.all()[:10]
         data = {
             'sentences': sentences,
-            'marks': range(1, 11),
+            'marks': range(1, 6),
             'properties': ['Understandability', 'Naturalness', 'Pleasantness', 'Overall'],
             'subtab': 'evaluate'
         }
