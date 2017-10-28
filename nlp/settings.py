@@ -130,7 +130,10 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
-FESTIVALDIR = '/home/mhassan/Documents/Festival/SPSYN/festival'
-FESTIVAL = '/home/mhassan/Documents/Festival/SPSYN/festival/bin/festival'
-
+FESTIVALDIR = os.environ.get('FESTIVALDIR')
+if not FESTIVALDIR:
+    raise Exception('environment variable FESTIVALDIR is not set. It should point Festival Directory')
+FESTIVAL = os.environ.get('FESTIVAL')
+if not FESTIVAL:
+    raise Exception('environment variable FESTIVAL is not set. It should point Festival binary')
 LOGIN_URL = '/admin/login/'

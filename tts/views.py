@@ -57,6 +57,7 @@ class GenerateVoice(View):
         return super(GenerateVoice, self).dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        self.create_direcories_if_does_not_exist()
         uuid_str = str(uuid.uuid4())
         voice = request.POST.get('voice')
         self.delete_old_generated_voice()
@@ -65,6 +66,15 @@ class GenerateVoice(View):
         saved_obj = self.save_file_to_db(generated_voice, request.POST.get('text'))
         self.delete_temp_files(text_input_file, generated_voice)
         return render(request, template_name='tts/voice_demo.html', context={'generated': saved_obj})
+
+    def create_direcories_if_does_not_exist(self):
+        self.create_directory_by_path(os.path.join(BASE_DIR, 'tmp'))
+        self.create_directory_by_path(os.path.join(BASE_DIR, 'tmp', 'input'))
+        self.create_directory_by_path(os.path.join(BASE_DIR, 'tmp', 'output'))
+
+    def create_directory_by_path(self, path):
+        if not os.path.exists(path):
+            os.makedirs(path)
 
     def save_input_in_file(self, txt, uuid_str):
         file_with_path = '%s/input/input_%s.txt' % (os.path.join(BASE_DIR, 'tmp'), uuid_str)
